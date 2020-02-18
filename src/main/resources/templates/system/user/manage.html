@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理中心</title>
+    <div th:replace="common/head"></div>
+</head>
+<body>
+<div class="container">
+    <div class="section">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h5 class="card-title">用户列表</h5>
+            </div>
+            <div class="card-body">
+                <div class="btn-group">
+                    <button class="btn btn-primary">
+                        <i class="fa fa-plus"></i>
+                        添加用户
+                    </button>
+                </div>
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>用户名</th><th>手机</th><th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${page.content}">
+                        <td th:text="${user.username}"></td>
+                        <td th:text="${user.phone}"></td>
+                        <td>
+                            <div class="btn-group-sm">
+                                <button class="btn btn-link btn-primary">修改密码</button>
+                                <button class="btn btn-link btn-primary" th:data-username="${user.username}" onclick="assignPermissions(this)">分配权限</button>
+                                <button class="btn btn-link btn-danger">删除</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${page.totalPages==0}">
+                        <td colspan="3">没有数据</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:replace="common/pagination"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div th:replace="common/foot"></div>
+<script type="text/javascript">
+    var permissionChooseModal;
+    function assignPermissions(e){
+        var username = $(e).data('username');
+        //全部取消选中
+        permissionChooseModal.find('input[type="checkbox"]').each(function (index) {
+            $(this).prop('checked', false);
+        })
+        //获取用户当前拥有的权限
+        $.get('/user/permissions/'+username, null, function (data) {
+            //选中已有权限
+            for(var i=0;i<data.length;i++) {
+                var permission = data[i].permission;
+                permissionChooseModal.find('input[value="'+permission+'"]').prop('checked', true);
+            }
+
+            permissionChooseModal.find('form').attr('action', '/user/assignPermissions/' + username);
+            permissionChooseModal.modal({
+                show: true
+            });
+        })
+
+    }
+    $(function () {
+        $.get('/permission/choose', null, function (data) {
+            // console.log(data);
+            $('body').append(data);
+            permissionChooseModal = $('#permission_choose_modal');
+        })
+    })
+</script>
+</body>
+</html>

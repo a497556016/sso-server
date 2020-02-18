@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div id="permission_choose_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">编辑权限</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="form" action="" method="post">
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>名称</th><th>描述</th><th>选择</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="item : ${permissions}">
+                            <td th:text="${item.name}"></td>
+                            <td th:text="${item.remark}"></td>
+                            <td>
+                                <input type="checkbox" class="form-control form-check" name="permissionNames" th:value="${item.name}">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</html>

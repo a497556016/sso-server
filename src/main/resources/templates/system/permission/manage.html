@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>权限管理中心</title>
+    <div th:replace="common/head.html"></div>
+</head>
+<body>
+<div th:replace="system/permission/edit.html"></div>
+<div class="container">
+    <div class="section">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h5 class="card-title">权限列表</h5>
+
+            </div>
+            <div class="card-body">
+                <div class="btn-group">
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#edit_permission_modal">
+                        <i class="fa fa-plus"></i>
+                        添加权限
+                    </button>
+                </div>
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>权限名称</th><th>描述</th><th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${page.totalPages>0}" th:each="permission : ${page.content}">
+                        <td th:text="${permission.name}"></td>
+                        <td th:text="${permission.remark}"></td>
+                        <td>
+                            <button th:onclick="'deletePermission('+${permission.id}+')'" class="btn btn-link btn-danger btn-sm">删除</button>
+                        </td>
+                    </tr>
+                    <tr th:if="${page.totalPages==0}">
+                        <td colspan="3">没有数据</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:replace="common/pagination"></div>
+                <!--<nav th:if="${page.totalPages>0}" aria-label="分页">
+                    <ul class="pagination justify-content-end">
+                        <li th:classappend="${page.hasPrevious()}?'':'disabled'" class="page-item"><a class="page-link" th:href="'?page=' + ${page.pageable.pageNumber-1}">上一页</a></li>
+                        <li th:each="count : ${#numbers.sequence(1, page.totalPages)}" class="page-item" th:classappend="${page.pageable.pageNumber} == ${count-1} ? 'active' : ''"><a class="page-link" th:href="'?page=' + ${count - 1}" th:text="${count}"></a></li>
+                        <li th:classappend="${page.hasNext()}?'':'disabled'" class="page-item"><a class="page-link" th:href="'?page=' + ${page.pageable.pageNumber+1}">下一页</a></li>
+                    </ul>
+                </nav>-->
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div th:replace="common/foot"></div>
+<script type="text/javascript">
+    function deletePermission(id){
+        utils.dialog.confirm('确认要删除吗？', function () {
+            $.ajax({
+                url: '/permission/delete/'+id,
+                type: 'delete',
+                success: function () {
+                    window.location.reload();
+                }
+            });
+        });
+    }
+    $(function () {
+
+    })
+</script>
+</body>
+</html>

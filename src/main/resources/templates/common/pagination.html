@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<nav th:if="${page.totalPages>0}" aria-label="分页">
+    <ul class="pagination justify-content-end">
+        <li th:classappend="${page.hasPrevious()}?'':'disabled'" class="page-item"><a class="page-link" th:href="'?page=' + ${page.pageable.pageNumber-1}">上一页</a></li>
+        <li th:each="count : ${#numbers.sequence(1, page.totalPages)}" class="page-item" th:classappend="${page.pageable.pageNumber} == ${count-1} ? 'active' : ''"><a class="page-link" th:href="'?page=' + ${count - 1}" th:text="${count}"></a></li>
+        <li th:classappend="${page.hasNext()}?'':'disabled'" class="page-item"><a class="page-link" th:href="'?page=' + ${page.pageable.pageNumber+1}">下一页</a></li>
+    </ul>
+</nav>
+</html>
